@@ -25,13 +25,31 @@ public class ApplicationInitConfig {
     private final RoleRepository roleRepository;
 
     @Bean
-    ApplicationRunner applicationRunner(UserRepository userRepository) {
+    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
-            Optional<UserEntity> user = userRepository.findByUsername("admin");
-            if (user.isEmpty()) {
-                List<RoleEntity> role = new ArrayList<>();
-                role.add(roleRepository.findById(1L).get());
-                UserEntity admin = UserEntity.builder()
+            List<RoleEntity> roleEntity=roleRepository.findAll();
+            if(roleEntity.size()==0){
+                List<RoleEntity> roles= new ArrayList<>();
+                RoleEntity role1=RoleEntity.builder()
+                        .code("ADMIN")
+                        .name("admin").build();
+                RoleEntity role2=RoleEntity.builder()
+                        .code("STAFF")
+                        .name("nhanvien").build();
+                RoleEntity role3=RoleEntity.builder()
+                        .code("USER")
+                        .name("khach").build();
+                roles.add(role1);
+                roles.add(role2);
+                roles.add(role3);
+                roleRepository.saveAll(roles);
+            }
+            else{
+                boolean user = userRepository.existsByUsername("admin");
+                if(user==false){
+                    List<RoleEntity> role = new ArrayList<>();
+                    role.add(roleRepository.findById(1L).get());
+                    UserEntity admin = UserEntity.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
                         .address("Hung Yen")
@@ -42,10 +60,11 @@ public class ApplicationInitConfig {
                         .roles(role)
                         .build();
                 userRepository.save(admin);
-            } else {
-                log.info("Admin exits already !");
+                }
+                else{
+                    log.info("Admin Exits");
+                }
             }
         };
-
     }
 }
