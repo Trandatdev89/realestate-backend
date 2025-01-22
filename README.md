@@ -12,9 +12,18 @@ Link URL backend đuược để trong file RequestAPI và RequestAPIToken bên 
 
 Lưu ý:
 
-+) Khi trang header hoặc giao diện web chưa kịp cập nhập hãy reload lại trang web
++) Khi login thành công mà header chưa kịp cập nhập hãy reload lại trang web,bạn có thể đăng nhập với google hoặc đăng ký tài khoản
 
-+) Khi đăng ký làm nhân viên thì mặc định sẽ được gắn role là User và chờ Admin cập nhập thành staff
++) Tìm kiếm nâng cao với 16 field tìm kiếm
+
++)Khi khởi chạy dự án lần đầu tien thì ứng dụng sẽ tự tạo 1 tài khoản là có tên đăng nhập là admin, mật khẩu cũng là admin.Người
+admin có toàn quyền bao gồm việc thêm xó sửa tòa nhà, nhân viên, khách hàng,giao dịch...
+
++) Khi đăng ký thì mặc định sẽ được gắn role là User và muốn cho thành nhân viên thì phải chờ admin duyệt bằng cách cập nhập tài khoản.
+Nhân viên viên thì sẽ được giao cho quản lý tòa nhà và khách hàng để liên hệ tư vấn
+
++)Giao dịch thì sẽ có 2 phương thức thanh toán là tiền mặt hoặc chuyển khoản.Với tiền mặt thì nhân viên sẽ cập nhập trên he thong , chuyển 
+khoản được tích hợp VNPay
 
 +) Phần liên hệ chính là phần đăng ký tài khoản của customer mỗi tài khoản sẽ chỉ được đăng ký 1 số điện thoại
 
