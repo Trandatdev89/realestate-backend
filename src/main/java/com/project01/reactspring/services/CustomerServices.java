@@ -2,6 +2,7 @@ package com.project01.reactspring.services;
 
 
 import com.project01.reactspring.dto.request.AssignmentRequest;
+import com.project01.reactspring.dto.request.MyInfoRequest;
 import com.project01.reactspring.dto.response.CustomerResponseDTO;
 import com.project01.reactspring.dto.response.PaginationDTO;
 import com.project01.reactspring.dto.response.StaffResponseDTO;
@@ -17,5 +18,5 @@ public interface CustomerServices {
     void assignmentCustomer( AssignmentRequest assignmentRequest);
     List<StaffResponseDTO> getInfoAssignment(Long customerId);
     CustomerResponseDTO getInfoCustomer(Long customerId);
-//    PaginationDTO<CustomerResponseDTO> searchAllCustomerByStaff(int page,int size);
+    List<CustomerResponseDTO> getAllCustomers();
 }

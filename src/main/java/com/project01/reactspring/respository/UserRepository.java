@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByBuilding_Id(Long buildingId);
     List<UserEntity> findByRoles_Code(String code);
     UserEntity findByUsernameContainingIgnoreCase(String username);
+    boolean existsByGoogleid(String id);
+    Optional<UserEntity> findByGoogleid(String id);
 }

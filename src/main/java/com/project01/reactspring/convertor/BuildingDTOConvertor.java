@@ -37,9 +37,11 @@ public class BuildingDTOConvertor {
     public BuildingEntity toBuildingEntity(BuildingRequestForm buildingRequestForm){
         BuildingEntity buildingEntity = modelMapper.map(buildingRequestForm, BuildingEntity.class);
         String typeCodeConvert=buildingRequestForm.getTypeCode().stream().map(item->item.toString()).collect(Collectors.joining(","));
-        String uploadfile=uploadFile.uploadFile(buildingRequestForm.getUploadfile());
+        if(buildingRequestForm.getUploadfile()!=null){
+            String uploadfile=uploadFile.uploadFile(buildingRequestForm.getUploadfile());
+            buildingEntity.setUploadfile(uploadfile);
+        }
         List<String> rentAreaEntities= Arrays.asList(buildingRequestForm.getRentAreaString().split(","));
-
         List<RentAreaEntity> rentAreaEntityList=new ArrayList<>();
         for(String item: rentAreaEntities){
             RentAreaEntity rentAreaEntity=RentAreaEntity.builder()
@@ -48,7 +50,7 @@ public class BuildingDTOConvertor {
                     .build();
             rentAreaEntityList.add(rentAreaEntity);
         }
-        buildingEntity.setUploadfile(uploadfile);
+
         buildingEntity.setType(typeCodeConvert);
         buildingEntity.setRentarea(rentAreaEntityList);
         return buildingEntity;

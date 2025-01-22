@@ -3,6 +3,7 @@ package com.project01.reactspring.controller;
 
 import com.project01.reactspring.dto.request.AssignmentRequest;
 import com.project01.reactspring.dto.request.BuildingRequestForm;
+import com.project01.reactspring.dto.request.MyInfoRequest;
 import com.project01.reactspring.dto.response.ApiResponse;
 import com.project01.reactspring.dto.response.CustomerResponseDTO;
 import com.project01.reactspring.dto.response.PaginationDTO;
@@ -60,6 +61,7 @@ public class CustomerController {
                 .build();
     }
 
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ApiResponse deleteCustomer(@PathVariable Long id) {
@@ -99,13 +101,13 @@ public class CustomerController {
                 .build();
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    public ApiResponse<List<CustomerResponseDTO>> getAllCustomers() {
+        List<CustomerResponseDTO> result= customerServices.getAllCustomers();
+        return ApiResponse.<List<CustomerResponseDTO>>builder()
+                .data(result)
+                .build();
+    }
 
-//    @GetMapping("/searchstaff")
-//    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-//    public ApiResponse<PaginationDTO> searchAllCustomerByStaff(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "2") int size) {
-//        PaginationDTO result= customerServices.searchAllCustomerByStaff(page,size);
-//        return ApiResponse.<PaginationDTO>builder()
-//                .data(result)
-//                .build();
-//    }
 }

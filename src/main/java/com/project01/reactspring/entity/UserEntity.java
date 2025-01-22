@@ -43,6 +43,15 @@ public class UserEntity extends BaseEntity implements UserDetails{
     @Column
     private Date birth;
 
+    @Column
+    private String thumnail;
+
+    @Column
+    private String googleid;
+
+    @Column
+    private String email;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.MERGE)
     private List<InValidateToken> inValidateTokens=new ArrayList<>();
 

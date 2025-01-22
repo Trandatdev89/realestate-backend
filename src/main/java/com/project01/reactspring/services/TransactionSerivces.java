@@ -7,7 +7,8 @@ import java.util.List;
 public interface TransactionSerivces {
     List<TransactionReponseDTO> getTransactionsByCustomerId(Long id);
     List<TransactionReponseDTO> getAllTransaction();
-    void updateTransaction(Long id,TransactionReponseDTO transaction);
+    void updateTransaction(Long id);
     void createTransaction(TransactionReponseDTO transaction);
     List<TransactionReponseDTO> getInfoTransaction(Long idCustomer);
+    TransactionReponseDTO getTransactionsById(Long id);
 }

@@ -9,10 +9,9 @@ import com.project01.reactspring.dto.response.UserResponseDTO;
 import com.project01.reactspring.services.UserServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/auth")
@@ -63,6 +62,15 @@ public class AuthenticationController {
                 .code(200)
                 .message("success!")
                 .data(userServices.register(registerRequest))
+                .build();
+    }
+
+    @PostMapping("/google")
+    public ApiResponse<AuthenticateResponse> outboundAuthenticate(@RequestParam(name = "code") String code) {
+        return ApiResponse.<AuthenticateResponse>builder()
+                .code(200)
+                .message("success!")
+                .data(userServices.outboundAuthenticate(code))
                 .build();
     }
 }

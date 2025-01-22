@@ -45,6 +45,7 @@ public class TransactionImpl implements TransactionSerivces {
             TransactionReponseDTO transactionDTO = modelMapper.map(transaction, TransactionReponseDTO.class);
             transactionDTO.setBuildingid(transaction.getBuilding().getId());
             transactionDTO.setCustomerid(transaction.getCustomer().getId());
+            transactionDTO.setMethod(transaction.getMethod());
             transactionsDTO.add(transactionDTO);
         }
         return transactionsDTO;
@@ -58,19 +59,17 @@ public class TransactionImpl implements TransactionSerivces {
             TransactionReponseDTO transactionDTO = modelMapper.map(transaction, TransactionReponseDTO.class);
             transactionDTO.setBuildingid(transaction.getBuilding().getId());
             transactionDTO.setCustomerid(transaction.getCustomer().getId());
+            transactionDTO.setMethod(transaction.getMethod());
             transactionsDTO.add(transactionDTO);
         }
         return transactionsDTO;
     }
 
     @Override
-    public void updateTransaction(Long id, TransactionReponseDTO transactionReponseDTO){
+    public void updateTransaction(Long id){
         TransactionEntity transaction = transactionRepository.findById(id).get();
-        transaction.setId(id);
         transaction.setStatus(true);
-        transaction.setBuilding(buildingRepository.findById(transactionReponseDTO.getBuildingid()).get());
-        transaction.setCustomer(customerRepository.findById(transactionReponseDTO.getCustomerid()).get());
-        transaction.setStaffid(String.valueOf(userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get().getId()));
+        transaction.setMethod("Tien mat");
         transactionRepository.save(transaction);
     }
 
@@ -91,9 +90,19 @@ public class TransactionImpl implements TransactionSerivces {
             TransactionReponseDTO transactionDTO = modelMapper.map(transactionEntity, TransactionReponseDTO.class);
             transactionDTO.setBuildingid(transactionEntity.getBuilding().getId());
             transactionDTO.setCustomerid(transactionEntity.getCustomer().getId());
+            transactionDTO.setMethod(transactionEntity.getMethod());
             transactionsDTO.add(transactionDTO);
         }
         return transactionsDTO;
     }
 
+    @Override
+    public TransactionReponseDTO getTransactionsById(Long id) {
+        TransactionEntity transaction = transactionRepository.findById(id).get();
+        TransactionReponseDTO transactionDTO = modelMapper.map(transaction, TransactionReponseDTO.class);
+        transactionDTO.setBuildingid(transaction.getBuilding().getId());
+        transactionDTO.setCustomerid(transaction.getCustomer().getId());
+        transactionDTO.setMethod(transaction.getMethod());
+        return transactionDTO;
+    }
 }

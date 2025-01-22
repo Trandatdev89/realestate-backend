@@ -21,5 +21,6 @@ public interface BuildingServices {
     void deleteBuilding(Long[] id);
     void assignmentBuilding(AssignmentRequest assignmentRequest);
     List<StaffResponseDTO> managerBuilding(Long id);
+    List<BuildingRequestForm> getAllBuilding();
 }
 

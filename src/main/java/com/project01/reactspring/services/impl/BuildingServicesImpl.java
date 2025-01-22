@@ -181,4 +181,15 @@ public class BuildingServicesImpl implements BuildingServices {
         }
         return staffResponseDTO;
     }
+
+    @Override
+    public List<BuildingRequestForm> getAllBuilding() {
+        List<BuildingEntity> buildings=buildingRepository.findAll();
+        List<BuildingRequestForm> buildingRequestForms=new ArrayList<>();
+        for(BuildingEntity item:buildings){
+            BuildingRequestForm buildingRequestForm=buildingDTOConvertor.toBuildingRequestForm(item);
+            buildingRequestForms.add(buildingRequestForm);
+        }
+        return buildingRequestForms;
+    }
 }

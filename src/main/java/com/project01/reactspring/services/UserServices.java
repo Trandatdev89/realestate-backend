@@ -18,4 +18,6 @@ public interface UserServices {
     UserResponseDTO getUser(Long id);
     void updateUser(Long id,UserRequestDTO userRequestDTO);
     UserResponseDTO getUserByNameOrUsername(String username);
+    void updateMyInfo(Long customerId, MyInfoRequest myInfoRequest);
+    AuthenticateResponse outboundAuthenticate(String code);
 }

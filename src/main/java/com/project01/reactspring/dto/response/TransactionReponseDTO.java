@@ -21,4 +21,7 @@ public class TransactionReponseDTO {
     private String note;
     private boolean status;
     private Date createddate;
+    private String staffid;
+    private Long amount;
+    private String method;
 }

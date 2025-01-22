@@ -8,21 +8,19 @@ import com.project01.reactspring.dto.request.TokenRequest;
 import com.project01.reactspring.exception.CustomException.AppException;
 import com.project01.reactspring.exception.CustomException.ErrorCode;
 import com.project01.reactspring.services.UserServices;
+import com.project01.reactspring.utils.GoogleUtil;
 import com.project01.reactspring.utils.SecurityUtil;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -43,7 +41,7 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    private static final String[] PUBLIC_ENPOINTS={"/auth/**","/avatar/**","/","/api/district","/api/typecode","/api/building/info/**"};
+    private static final String[] PUBLIC_ENPOINTS={"/auth/**","/avatar/**","/","/api/district","/api/typecode","/api/building/info/**","/payment","/vnpay-payment/**"};
 
     @Autowired
     @Lazy
@@ -51,6 +49,9 @@ public class WebSecurityConfig {
 
     @Autowired
     private UserServices userServices;
+
+    @Autowired
+    private GoogleUtil googleUtil;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -69,7 +70,6 @@ public class WebSecurityConfig {
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
                                 .decoder(jwtDecoder()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-
                         .accessDeniedHandler(new JwtAccessDeniedEntryPoint()))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

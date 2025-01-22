@@ -31,9 +31,11 @@ public class TransactionEntity extends BaseEntity {
     @Column
     private String staffid;
 
-//    @ManyToOne
-//    @JoinColumn(name = "customerid")
-//    private CustomerEntity customer;
+    @Column
+    private String method;
+
+    @Column
+    private Long amount;
 
     @ManyToOne
     @JoinColumn(name = "customerid")

@@ -38,10 +38,6 @@ public class BuildingController {
                   .build();
     }
 
-
-
-
-
     //Get thông tin sửa nhà
     @GetMapping("/info/{id}")
     public ApiResponse<BuildingRequestForm> getInfoBuilding(@PathVariable Long id) {
@@ -96,6 +92,15 @@ public class BuildingController {
     public ApiResponse<List<StaffResponseDTO>> getInfoAssignment(@PathVariable Long buildingId) {
         List<StaffResponseDTO> result=buildingServices.managerBuilding(buildingId);
         return  ApiResponse.<List<StaffResponseDTO>>builder()
+                .data(result)
+                .build();
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    public ApiResponse<List<BuildingRequestForm>> getAllBuilding() {
+        List<BuildingRequestForm> result=buildingServices.getAllBuilding();
+        return  ApiResponse.<List<BuildingRequestForm>>builder()
                 .data(result)
                 .build();
     }

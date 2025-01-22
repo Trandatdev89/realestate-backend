@@ -32,5 +32,7 @@ public class UserResponseDTO {
 
     private Date birth;
 
+    private String thumnail;
+
     private List<String> role=new ArrayList<>();
 }

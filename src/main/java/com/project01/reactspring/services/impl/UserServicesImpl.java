@@ -6,7 +6,6 @@ import com.nimbusds.jwt.SignedJWT;
 import com.project01.reactspring.convertor.UserDTOConvertor;
 import com.project01.reactspring.dto.request.*;
 import com.project01.reactspring.dto.response.*;
-import com.project01.reactspring.entity.BuildingEntity;
 import com.project01.reactspring.entity.InValidateToken;
 import com.project01.reactspring.entity.RoleEntity;
 import com.project01.reactspring.entity.UserEntity;
@@ -16,16 +15,16 @@ import com.project01.reactspring.respository.InvalidateTokenRepository;
 import com.project01.reactspring.respository.RoleRepository;
 import com.project01.reactspring.respository.UserRepository;
 import com.project01.reactspring.services.UserServices;
+import com.project01.reactspring.utils.GoogleUtil;
 import com.project01.reactspring.utils.SecurityUtil;
-
-import org.apache.catalina.User;
-import org.modelmapper.ModelMapper;
+import com.project01.reactspring.utils.UploadFile;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.experimental.NonFinal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,17 +32,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service
 public class UserServicesImpl implements UserServices {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServicesImpl.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -65,6 +67,24 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private UploadFile uploadFile;
+
+    @Autowired
+    private GoogleUtil googleUtil;
+
+    @Value("${outbound.identity.client-id}")
+    @NonFinal
+    private String clientId;
+
+    @Value("${outbound.identity.client-secret}")
+    @NonFinal
+    private String clientSecret;
+
+
+    @Value("${outbound.identity.redirect-uri}")
+    @NonFinal
+    private String redirectUri;
 
     @Override
     public AuthenticateResponse authenticate(AuthenticateRequest authenticateRequest) {
@@ -202,6 +222,7 @@ public class UserServicesImpl implements UserServices {
         String name= SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user=userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND));
         UserResponseDTO userResponseDTO=userDTOConvertor.toUserDTOResponse(user);
+
         return userResponseDTO;
     }
 
@@ -233,5 +254,65 @@ public class UserServicesImpl implements UserServices {
         }catch (IllegalArgumentException exception){
             throw new AppException(ErrorCode.SEARCH_USERNAME);
         }
+    }
+
+    @Override
+    public void updateMyInfo(Long customerId, MyInfoRequest myInfoRequest) {
+        UserEntity user=userRepository.findById(customerId).orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND));
+        if(myInfoRequest.getThumnail()!=null){
+            String thumnail=uploadFile.uploadFile(myInfoRequest.getThumnail());
+            user.setThumnail(thumnail);
+        }
+        user.setAddress(myInfoRequest.getAddress());
+        user.setFullname(myInfoRequest.getFullname());
+        userRepository.save(user);
+    }
+
+    @Override
+    public AuthenticateResponse outboundAuthenticate(String code ) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("code", code);
+        body.add("client_id", clientId);
+        body.add("client_secret", clientSecret);
+        body.add("redirect_uri", redirectUri);
+        body.add("grant_type", "authorization_code");
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> response = restTemplate.postForEntity(
+                "https://oauth2.googleapis.com/token", requestEntity, Map.class);
+
+        System.out.println(response);
+
+        String accessToken = (String) response.getBody().get("access_token");
+        System.out.println(accessToken);
+        // 2. Lấy thông tin người dùng từ Google UserInfo API
+        HttpHeaders userHeaders = new HttpHeaders();
+        userHeaders.setBearerAuth(accessToken);
+
+        HttpEntity<Void> userRequest = new HttpEntity<>(userHeaders);
+        ResponseEntity<Map> userResponse = restTemplate.exchange(
+                "https://www.googleapis.com/oauth2/v2/userinfo",
+                HttpMethod.GET,
+                userRequest,
+                Map.class);
+
+        Map<String, Object> userInfo = userResponse.getBody();
+        GoogleDTO googleDTO = GoogleDTO.builder()
+                .googleId((String) userInfo.get("id"))
+                .email((String) userInfo.get("email"))
+                .thumnail((String) userInfo.get("picture"))
+                .username((String) userInfo.get("email"))
+                .fullname((String) userInfo.get("name"))
+                .build();
+
+        return AuthenticateResponse.builder()
+                .token(googleUtil.generateTokenGoogle(googleDTO))
+                .authenticated(true)
+                .build();
     }
 }

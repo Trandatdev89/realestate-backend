@@ -1,17 +1,21 @@
 package com.project01.reactspring.services.impl;
 
 import com.project01.reactspring.dto.request.AssignmentRequest;
+import com.project01.reactspring.dto.request.MyInfoRequest;
 import com.project01.reactspring.dto.response.CustomerResponseDTO;
 import com.project01.reactspring.dto.response.PaginationDTO;
 import com.project01.reactspring.dto.response.StaffResponseDTO;
 import com.project01.reactspring.entity.CustomerEntity;
+import com.project01.reactspring.entity.TransactionEntity;
 import com.project01.reactspring.entity.UserEntity;
 import com.project01.reactspring.exception.CustomException.AppException;
 import com.project01.reactspring.exception.CustomException.ErrorCode;
 import com.project01.reactspring.respository.CustomerRepository;
+import com.project01.reactspring.respository.TransactionRepository;
 import com.project01.reactspring.respository.UserRepository;
 import com.project01.reactspring.services.CustomerServices;
 import com.project01.reactspring.utils.SendEmail;
+import com.project01.reactspring.utils.UploadFile;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,7 +44,6 @@ public class CustomerServicesImpl implements CustomerServices {
 
     @Autowired
     private SendEmail sendEmail;
-
 
     @Override
     public PaginationDTO<CustomerResponseDTO> findAllCustomer(int page, int size) {
@@ -180,26 +183,15 @@ public class CustomerServicesImpl implements CustomerServices {
         return customerResponseDTO;
     }
 
-//    @Override
-//    public PaginationDTO searchAllCustomerByStaff(int page,int size) {
-//        List<CustomerResponseDTO> result = new ArrayList<>();
-//        Pageable pageable= PageRequest.of(page,size);
-//
-//        UserEntity userEntity=userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-//        Page<CustomerEntity> pageCustomer= customerRepository.findByUsers_Id(pageable,userEntity.getId());
-//
-//        for(CustomerEntity item : pageCustomer.getContent()) {
-//            CustomerResponseDTO customerResponseDTO=modelMapper.map(item,CustomerResponseDTO.class);
-//            result.add(customerResponseDTO);
-//        }
-//
-//        PaginationDTO paginationDTO = PaginationDTO.<CustomerResponseDTO>builder()
-//                .currentPage(page)
-//                .pageSize(size)
-//                .data(result)
-//                .totalItem(pageCustomer.getTotalElements())
-//                .totalPages(pageCustomer.getTotalPages())
-//                .build();
-//        return paginationDTO;
-//    }
+    @Override
+    public List<CustomerResponseDTO> getAllCustomers() {
+        List<CustomerEntity> customer=customerRepository.findAll();
+        List<CustomerResponseDTO> customerResponseDTOS=new ArrayList<>();
+        for(CustomerEntity item : customer){
+            CustomerResponseDTO customerResponseDTO=modelMapper.map(item,CustomerResponseDTO.class);
+            customerResponseDTOS.add(customerResponseDTO);
+        }
+        return customerResponseDTOS;
+    }
+
 }

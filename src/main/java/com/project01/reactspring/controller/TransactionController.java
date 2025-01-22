@@ -17,15 +17,22 @@ public class TransactionController {
     @Autowired
     private TransactionSerivces transactionSerivces;
 
+//    @GetMapping("{id}")
+//    @PreAuthorize("hasAnyRole('STAFF')")
+//    public List<TransactionReponseDTO> getTransactionsByCustomerId(@PathVariable Long id) {
+//        List<TransactionReponseDTO> transactionReponseDTOS= transactionSerivces.getTransactionsByCustomerId(id);
+//        return transactionReponseDTOS;
+//    }
+
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyRole('STAFF')")
-    public List<TransactionReponseDTO> getTransactionsByCustomerId(@PathVariable Long id) {
-        List<TransactionReponseDTO> transactionReponseDTOS= transactionSerivces.getTransactionsByCustomerId(id);
-        return transactionReponseDTOS;
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public TransactionReponseDTO getTransactionsById(@PathVariable Long id) {
+       TransactionReponseDTO transactionReponseDTOS= transactionSerivces.getTransactionsById(id);
+       return transactionReponseDTOS;
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public List<TransactionReponseDTO> getAllTransaction() {
         List<TransactionReponseDTO> transactionReponseDTOS= transactionSerivces.getAllTransaction();
         return transactionReponseDTOS;
@@ -33,8 +40,8 @@ public class TransactionController {
 
     @PatchMapping("{id}")
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
-    public ApiResponse updateTransaction(@PathVariable Long id,@RequestBody TransactionReponseDTO transactionReponseDTO) {
-        transactionSerivces.updateTransaction(id,transactionReponseDTO);
+    public ApiResponse updateTransaction(@PathVariable Long id) {
+        transactionSerivces.updateTransaction(id);
         return ApiResponse.builder()
                 .code(200)
                 .message("Success")

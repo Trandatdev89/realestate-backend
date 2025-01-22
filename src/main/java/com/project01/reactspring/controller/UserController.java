@@ -1,6 +1,7 @@
 package com.project01.reactspring.controller;
 
 
+import com.project01.reactspring.dto.request.MyInfoRequest;
 import com.project01.reactspring.dto.request.UserRequestDTO;
 import com.project01.reactspring.dto.response.ApiResponse;
 import com.project01.reactspring.dto.response.DistrictOrStaffDTO;
@@ -21,7 +22,7 @@ public class UserController {
     private UserServices userServices;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public ApiResponse<List<UserResponseDTO>> getAllUsers() {
        return ApiResponse.<List<UserResponseDTO>>builder()
                .code(200)
@@ -47,12 +48,22 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF','USER')")
     public ApiResponse<UserResponseDTO> getMyInfo() {
         return ApiResponse.<UserResponseDTO>builder()
                 .code(200)
                 .message("success!")
                 .data(userServices.getMyInfo())
+                .build();
+    }
+
+    @PutMapping("/my-info/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF','USER')")
+    public ApiResponse updateMyInfo(@PathVariable Long id,@ModelAttribute MyInfoRequest myInfoRequest) {
+        userServices.updateMyInfo(id,myInfoRequest);
+        return ApiResponse.builder()
+                .code(200)
+                .message("success")
                 .build();
     }
 
