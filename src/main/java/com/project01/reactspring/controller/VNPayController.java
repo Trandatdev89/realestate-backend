@@ -46,7 +46,7 @@ public class VNPayController {
         transaction.setCode(params.get("vnp_TransactionNo"));
         transaction.setNote(params.get("vnp_OrderInfo"));
         transactionRepository.save(transaction);
-        String targetUrl = "http://localhost:3000/success";
+        String targetUrl = "https://realestate-frontend-six.vercel.app/success";
         org.springframework.http.HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(targetUrl));
         return new ResponseEntity<>(headers, HttpStatus.FOUND);

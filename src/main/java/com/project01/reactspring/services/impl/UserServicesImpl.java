@@ -37,6 +37,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -260,7 +261,12 @@ public class UserServicesImpl implements UserServices {
     public void updateMyInfo(Long customerId, MyInfoRequest myInfoRequest) {
         UserEntity user=userRepository.findById(customerId).orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND));
         if(myInfoRequest.getThumnail()!=null){
-            String thumnail=uploadFile.uploadFile(myInfoRequest.getThumnail());
+            String thumnail= null;
+            try {
+                thumnail = uploadFile.uploadFile(myInfoRequest.getThumnail());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             user.setThumnail(thumnail);
         }
         user.setAddress(myInfoRequest.getAddress());
@@ -286,11 +292,7 @@ public class UserServicesImpl implements UserServices {
         ResponseEntity<Map> response = restTemplate.postForEntity(
                 "https://oauth2.googleapis.com/token", requestEntity, Map.class);
 
-        System.out.println(response);
-
         String accessToken = (String) response.getBody().get("access_token");
-        System.out.println(accessToken);
-        // 2. Lấy thông tin người dùng từ Google UserInfo API
         HttpHeaders userHeaders = new HttpHeaders();
         userHeaders.setBearerAuth(accessToken);
 

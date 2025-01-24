@@ -20,13 +20,7 @@ public class UserDTOConvertor {
         UserResponseDTO userResponseDTO=modelMapper.map(item, UserResponseDTO.class);
         List<String> role=item.getRoles().stream().map(it->it.getCode().toString()).collect(Collectors.toList());
         userResponseDTO.setRole(role);
-        String thumnail;
-        if(item.getGoogleid()!=null){
-            thumnail=item.getThumnail();
-        }else{
-            thumnail= ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()+"/avatar/"+item.getThumnail();
-        }
-        userResponseDTO.setThumnail(thumnail);
+        userResponseDTO.setThumnail(item.getThumnail());
         return userResponseDTO;
     }
 }

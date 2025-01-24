@@ -10,7 +10,7 @@ Chạy lệnh npm install ,chạy lệnh npm start để chạy dư án front-en
 
 Link URL backend đuược để trong file RequestAPI và RequestAPIToken bên phía front end,hãy đối đường lại đường dẫn thành http://localhost:8080/
 
-Lưu ý:
+Mô tả cơ bản về dự án:
 
 +) Khi login thành công mà header chưa kịp cập nhập hãy reload lại trang web,bạn có thể đăng nhập với google hoặc đăng ký tài khoản
 
@@ -19,8 +19,8 @@ Lưu ý:
 +)Khi khởi chạy dự án lần đầu tien thì ứng dụng sẽ tự tạo 1 tài khoản là có tên đăng nhập là admin, mật khẩu cũng là admin.Người
 admin có toàn quyền bao gồm việc thêm xó sửa tòa nhà, nhân viên, khách hàng,giao dịch...
 
-+) Khi đăng ký thì mặc định sẽ được gắn role là User và muốn cho thành nhân viên thì phải chờ admin duyệt bằng cách cập nhập tài khoản.
-Nhân viên viên thì sẽ được giao cho quản lý tòa nhà và khách hàng để liên hệ tư vấn
++) Khi đăng ký thì mặc định sẽ được gắn role là User và muốn cho thành nhân viên thì phải chờ admin duyệt bằng cách cập nhập tài khoản
+trong quan ly nhân viên, nhân viên thì sẽ được giao cho quản lý tòa nhà và khách hàng để liên hệ tư vấn
 
 +)Giao dịch thì sẽ có 2 phương thức thanh toán là tiền mặt hoặc chuyển khoản.Với tiền mặt thì nhân viên sẽ cập nhập trên he thong , chuyển 
 khoản được tích hợp VNPay

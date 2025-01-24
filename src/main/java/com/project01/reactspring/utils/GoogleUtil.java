@@ -56,6 +56,7 @@ public class GoogleUtil {
 
         SecurityContextHolder.getContext().setAuthentication(oAuth2AuthenticationToken);
 
+        String name=SecurityContextHolder.getContext().getAuthentication().getName();
         String token = securityUtil.generateToken(user);
         return token;
     }

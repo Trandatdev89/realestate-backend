@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +39,12 @@ public class BuildingDTOConvertor {
         BuildingEntity buildingEntity = modelMapper.map(buildingRequestForm, BuildingEntity.class);
         String typeCodeConvert=buildingRequestForm.getTypeCode().stream().map(item->item.toString()).collect(Collectors.joining(","));
         if(buildingRequestForm.getUploadfile()!=null){
-            String uploadfile=uploadFile.uploadFile(buildingRequestForm.getUploadfile());
+            String uploadfile= null;
+            try {
+                uploadfile = uploadFile.uploadFile(buildingRequestForm.getUploadfile());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             buildingEntity.setUploadfile(uploadfile);
         }
         List<String> rentAreaEntities= Arrays.asList(buildingRequestForm.getRentAreaString().split(","));
@@ -58,13 +64,10 @@ public class BuildingDTOConvertor {
 
     public BuildingRequestForm toBuildingRequestForm(BuildingEntity buildingEntity){
             BuildingRequestForm buildingRequestForm = modelMapper.map(buildingEntity, BuildingRequestForm.class);
-
-            String uploadfile=ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()+"/avatar/"+buildingEntity.getUploadfile();
             List<String> typeCodeConvert = Arrays.asList(buildingEntity.getType().split(","));
             List<RentAreaEntity> rentAreaEntityList=buildingEntity.getRentarea();
             String rentAreaConvert=rentAreaEntityList.stream().map(item->item.getValue().toString()).collect(Collectors.joining(","));
-
-            buildingRequestForm.setUploadfileString(uploadfile);
+            buildingRequestForm.setUploadfileString(buildingEntity.getUploadfile());
             buildingRequestForm.setTypeCode(typeCodeConvert);
             buildingRequestForm.setRentAreaString(rentAreaConvert);
 
@@ -78,7 +81,12 @@ public class BuildingDTOConvertor {
         }
 
         String typeCodeConvert=buildingRequestForm.getTypeCode().stream().map(item->item.toString()).collect(Collectors.joining(","));
-        String uploadfile=uploadFile.uploadFile(buildingRequestForm.getUploadfile());
+        String uploadfile= null;
+        try {
+            uploadfile = uploadFile.uploadFile(buildingRequestForm.getUploadfile());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         List<String> rentAreaEntities= Arrays.asList(buildingRequestForm.getRentAreaString().split(","));
 
         List<RentAreaEntity> rentAreaEntityList=new ArrayList<>();
@@ -97,11 +105,10 @@ public class BuildingDTOConvertor {
 
     public BuildingResponseDTO toBuildingResponseDTO(BuildingEntity buildingEntity){
         BuildingResponseDTO buildingResponseDTO = modelMapper.map(buildingEntity, BuildingResponseDTO.class);
-        String uploadfile= ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()+"/avatar/"+buildingEntity.getUploadfile();
         String address=buildingEntity.getDistrict()+" "+buildingEntity.getStreet()+" "+buildingEntity.getWard();
         List<RentAreaEntity> rentAreaEntityList=buildingEntity.getRentarea();
         String rentArea=rentAreaEntityList.stream().map(item->item.getValue().toString()).collect(Collectors.joining(","));
-        buildingResponseDTO.setUploadfile(uploadfile);
+        buildingResponseDTO.setUploadfile(buildingEntity.getUploadfile());
         buildingResponseDTO.setAddress(address);
         buildingResponseDTO.setRentAreaString(rentArea);
         return buildingResponseDTO;

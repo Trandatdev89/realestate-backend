@@ -25,5 +25,5 @@ public class BuildingResponseDTO {
     private String serviceFee;
     private String brokerageFee;
     private String uploadfile;
-
+    private boolean isBuy;
 }
