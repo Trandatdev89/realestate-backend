@@ -3,12 +3,12 @@ Cách sử dụng dự án local như sau:
 Backend
 
 Yêu cầu: Postman,IDE (intel,eclipse...),MySQL,JDK
+Trong file application.property hãy đổi url front-end thành http://localhost:3000/authenticate tại biến "outbound.identity.redirect-uri"
+
 
 Frontend
-
 Chạy lệnh npm install ,chạy lệnh npm start để chạy dư án front-end
-
-Link URL backend đuược để trong file RequestAPI và RequestAPIToken bên phía front end,hãy đối đường lại đường dẫn thành http://localhost:8080/
+Link URL backend đuược để trong file RequestAPI và RequestAPIToken  của thư mục utils bên phía front end,hãy đối đường lại đường dẫn thành http://localhost:8080/
 
 Mô tả cơ bản về dự án:
 

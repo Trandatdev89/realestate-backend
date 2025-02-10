@@ -53,10 +53,7 @@ public class GoogleUtil {
         OAuth2User oAuth2User = new DefaultOAuth2User(user.getAuthorities(), attributes, "email");
         OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(
                 oAuth2User, user.getAuthorities(), "google");
-
         SecurityContextHolder.getContext().setAuthentication(oAuth2AuthenticationToken);
-
-        String name=SecurityContextHolder.getContext().getAuthentication().getName();
         String token = securityUtil.generateToken(user);
         return token;
     }
