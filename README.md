@@ -1,5 +1,8 @@
 Cách sử dụng dự án local như sau:
 
+
+LƯU Ý : HÃY XÓA TOKEN Ở LOCALSTORAGE ĐI KHI CLONE PROJECT VỀ BỞI VÌ CÙNG LOCALHOST:3000 MÀ MỖI TOKEN THI KHAC NHAU, NẾU KHÔNG XÓA SẼ GÂY LỖI
+
 Backend
 
 Yêu cầu: Postman,IDE (intel,eclipse...),MySQL,JDK
@@ -26,7 +29,5 @@ trong quan ly nhân viên, nhân viên thì sẽ được giao cho quản lý t�
 khoản được tích hợp VNPay
 
 +) Phần liên hệ chính là phần đăng ký tài khoản của customer mỗi tài khoản sẽ chỉ được đăng ký 1 số điện thoại
-
-Database online: "DATABASE_HOST" :"mysql-2da57429-tranquocdat30122004-1fa2.i.aivencloud.com", "DATABASE_PORT" : "15510", "DATABASE_USERNAME" : "avnadmin", "DATABASE_PASSWORD" : "AVNS_6kwbf0N_I5maEe146UP", "DATABASE_NAME" : "realestate"
 
 
