@@ -30,4 +30,5 @@ khoản được tích hợp VNPay
 
 +) Phần liên hệ chính là phần đăng ký tài khoản của customer mỗi tài khoản sẽ chỉ được đăng ký 1 số điện thoại
 
+Database online: "DATABASE_HOST" :"mysql-2da57429-tranquocdat30122004-1fa2.i.aivencloud.com", "DATABASE_PORT" : "15510", "DATABASE_USERNAME" : "avnadmin", "DATABASE_PASSWORD" : "AVNS_6kwbf0N_I5maEe146UP", "DATABASE_NAME" : "realestate"
 
